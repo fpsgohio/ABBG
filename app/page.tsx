@@ -4,30 +4,32 @@ import { useState } from "react";
 
 export default function Home() {
   const [submitted, setSubmitted] = useState(false);
-  const [files, setFiles] = useState<File[]>([]);
+const [processing, setProcessing] = useState(false);
+const [files, setFiles] = useState<File[]>([]);
 
-  const handleSubmit = async (
-    e: React.FormEvent
-  ) => {
-    e.preventDefault();
+ const handleSubmit = async (
+  e: React.FormEvent
+) => {
+  e.preventDefault();
 
-    const formData = new FormData();
+  setProcessing(true);
 
-    files.forEach((file) => {
-      formData.append("files", file);
-    });
+  const formData = new FormData();
 
-    const response = await fetch("/api/upload", {
-      method: "POST",
-      body: formData,
-    });
+  files.forEach((file) => {
+    formData.append("files", file);
+  });
 
-    const result = await response.json();
+  const response = await fetch("/api/upload", {
+    method: "POST",
+    body: formData,
+  });
 
-    console.log(result);
+  await response.json();
 
-    setSubmitted(true);
-  };
+  setProcessing(false);
+  setSubmitted(true);
+};
 
   const handleFileChange = (
     e: React.ChangeEvent<HTMLInputElement>
@@ -37,6 +39,17 @@ export default function Home() {
     setFiles(Array.from(e.target.files));
   };
 
+  if (processing) {
+  return (
+    <main className="min-h-screen bg-slate-900 text-white flex items-center justify-center">
+      <div className="text-center">
+        <h1 className="text-5xl font-bold">
+          Processing...
+        </h1>
+      </div>
+    </main>
+  );
+}
   if (submitted) {
     return (
       <main className="min-h-screen bg-slate-900 text-white flex items-center justify-center">
