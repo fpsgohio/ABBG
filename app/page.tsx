@@ -4,10 +4,19 @@ import { useState } from "react";
 
 export default function Home() {
   const [submitted, setSubmitted] = useState(false);
+  const [files, setFiles] = useState<File[]>([]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     setSubmitted(true);
+  };
+
+  const handleFileChange = (
+    e: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    if (!e.target.files) return;
+
+    setFiles(Array.from(e.target.files));
   };
 
   if (submitted) {
@@ -40,9 +49,24 @@ export default function Home() {
             <input
               type="file"
               multiple
+              onChange={handleFileChange}
               className="w-full border border-slate-600 rounded p-2"
             />
           </div>
+
+          {files.length > 0 && (
+            <div className="bg-slate-700 rounded p-4">
+              <p className="font-semibold mb-2">
+                {files.length} file(s) selected
+              </p>
+
+              <ul className="text-sm text-slate-300">
+                {files.map((file) => (
+                  <li key={file.name}>• {file.name}</li>
+                ))}
+              </ul>
+            </div>
+          )}
 
           <button
             type="submit"
