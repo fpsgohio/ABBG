@@ -6,8 +6,26 @@ export default function Home() {
   const [submitted, setSubmitted] = useState(false);
   const [files, setFiles] = useState<File[]>([]);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (
+    e: React.FormEvent
+  ) => {
     e.preventDefault();
+
+    const formData = new FormData();
+
+    files.forEach((file) => {
+      formData.append("files", file);
+    });
+
+    const response = await fetch("/api/upload", {
+      method: "POST",
+      body: formData,
+    });
+
+    const result = await response.json();
+
+    console.log(result);
+
     setSubmitted(true);
   };
 
@@ -62,7 +80,9 @@ export default function Home() {
 
               <ul className="text-sm text-slate-300">
                 {files.map((file) => (
-                  <li key={file.name}>• {file.name}</li>
+                  <li key={file.name}>
+                    • {file.name}
+                  </li>
                 ))}
               </ul>
             </div>
