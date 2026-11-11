@@ -1,4 +1,25 @@
+"use client";
+
+import { useState } from "react";
+
 export default function Home() {
+  const [submitted, setSubmitted] = useState(false);
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    setSubmitted(true);
+  };
+
+  if (submitted) {
+    return (
+      <main className="min-h-screen bg-slate-900 text-white flex items-center justify-center">
+        <h1 className="text-5xl font-bold">
+          Submitted
+        </h1>
+      </main>
+    );
+  }
+
   return (
     <main className="min-h-screen bg-slate-900 text-white flex items-center justify-center p-8">
       <div className="max-w-xl w-full bg-slate-800 rounded-xl p-8 shadow-lg">
@@ -10,7 +31,7 @@ export default function Home() {
           Upload Game Night score sheets.
         </p>
 
-        <form className="space-y-6">
+        <form onSubmit={handleSubmit} className="space-y-6">
           <div>
             <label className="block mb-2 font-semibold">
               Score Sheet Files
